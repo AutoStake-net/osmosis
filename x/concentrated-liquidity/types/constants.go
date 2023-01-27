@@ -16,4 +16,5 @@ var (
 	ExponentAtPriceOneMin     = sdk.NewInt(-12)
 	MaxSpotPrice              = sdk.MustNewDecFromStr("100000000000000000000000000000000000000")
 	MinSpotPrice              = sdk.MustNewDecFromStr("0.000000000000000001")
+	AuthorizedTickSpacing     = []uint64{1, 10, 60, 200}
 )
