@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 
+	"github.com/osmosis-labs/osmosis/v14/x/concentrated-liquidity/model"
 	poolmanagertypes "github.com/osmosis-labs/osmosis/v14/x/poolmanager/types"
 
 	cl "github.com/osmosis-labs/osmosis/v14/x/concentrated-liquidity"
@@ -54,10 +55,13 @@ func (s *KeeperTestSuite) SetupDefaultPosition(poolId uint64) {
 	s.SetupPosition(poolId, s.TestAccs[0], DefaultCoin0, DefaultCoin1, DefaultLowerTick, DefaultUpperTick)
 }
 
-func (s *KeeperTestSuite) SetupPosition(poolId uint64, owner sdk.AccAddress, coin0, coin1 sdk.Coin, lowerTick, upperTick int64) {
+func (s *KeeperTestSuite) SetupPosition(poolId uint64, owner sdk.AccAddress, coin0, coin1 sdk.Coin, lowerTick, upperTick int64) model.Position {
 	s.FundAcc(owner, sdk.NewCoins(coin0, coin1))
 	_, _, _, err := s.App.ConcentratedLiquidityKeeper.CreatePosition(s.Ctx, poolId, owner, coin0.Amount, coin1.Amount, sdk.ZeroInt(), sdk.ZeroInt(), lowerTick, upperTick)
 	s.Require().NoError(err)
+	position, err := s.App.ConcentratedLiquidityKeeper.GetPosition(s.Ctx, poolId, owner, lowerTick, upperTick)
+	s.Require().NoError(err)
+	return *position
 }
 
 // validatePositionUpdate validates that position with given parameters has expectedRemainingLiquidity left.
